@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Octokit } from 'octokit';
+import { Octokit } from '@octokit/rest';
 import inquirer from 'inquirer';
 import inquirerAutocomplete from 'inquirer-autocomplete-prompt';
 import chalk from 'chalk';
@@ -33,11 +33,12 @@ if (!githubToken) {
   process.exit(1);
 }
 
-const octokit = new Octokit({
+// Create the default Octokit instance
+const defaultOctokit = new Octokit({
   auth: githubToken
 });
 
-interface Repository {
+export interface Repository {
   name: string;
   full_name: string;
   description: string | null;
@@ -45,7 +46,7 @@ interface Repository {
   fork: boolean;
 }
 
-interface GithubRepo {
+export interface GithubRepo {
   name: string;
   full_name: string;
   description: string | null;
@@ -53,7 +54,7 @@ interface GithubRepo {
   fork: boolean;
 }
 
-async function getForksList(): Promise<Repository[]> {
+export async function getForksList(octokit: Octokit = defaultOctokit): Promise<Repository[]> {
   try {
     console.log(chalk.blue('\n🔍 Scanning your GitHub account for forks...'));
     const response = await octokit.request('GET /user/repos', {
@@ -86,7 +87,7 @@ async function getForksList(): Promise<Repository[]> {
   }
 }
 
-async function deleteFork(fullName: string): Promise<boolean> {
+export async function deleteFork(fullName: string, octokit: Octokit = defaultOctokit): Promise<boolean> {
   try {
     const [owner, repo] = fullName.split('/');
     await octokit.request('DELETE /repos/{owner}/{repo}', {
@@ -103,9 +104,9 @@ async function deleteFork(fullName: string): Promise<boolean> {
   }
 }
 
-const CONFIRMATION_PHRASE = "I'm sure I want to delete all forks";
+export const CONFIRMATION_PHRASE = "I'm sure I want to delete all forks";
 
-async function confirmDeleteAll(forksCount: number): Promise<boolean> {
+export async function confirmDeleteAll(forksCount: number): Promise<boolean> {
   console.log(chalk.bgRed.white.bold('\n⚠️  CAUTION: Mass Deletion Requested'));
   console.log(chalk.cyan('─'.repeat(50)));
   console.log(chalk.red.bold('🗑️  You are about to delete ALL your fork repositories!'));
@@ -293,10 +294,7 @@ async function main() {
   console.log(chalk.cyan('\nThank you for using Forkaway! 👋\n'));
 }
 
-main().catch(error => {
-  console.error(chalk.red.bold('\n❌ An unexpected error occurred:'));
-  console.error(chalk.red(error));
-  console.log(chalk.yellow('\n👉 Need help? Open an issue at:'));
-  console.log(chalk.blue('https://github.com/bismarkhenao/forkaway/issues\n'));
-  process.exit(1);
-}); 
+// Only run main if this file is being run directly
+if (import.meta.url === new URL(import.meta.url).href) {
+  main();
+} 
