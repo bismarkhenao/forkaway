@@ -4,6 +4,8 @@ import { Octokit } from 'octokit';
 import inquirer from 'inquirer';
 import inquirerAutocomplete from 'inquirer-autocomplete-prompt';
 import chalk from 'chalk';
+import ora from 'ora';
+import cliProgress from 'cli-progress';
 
 // Register the autocomplete prompt
 inquirer.registerPrompt('autocomplete', inquirerAutocomplete);
@@ -161,65 +163,13 @@ async function main() {
 
   console.log(chalk.green(`\n✨ Found ${chalk.bold(forks.length)} fork repositories`));
 
-  // Add search functionality
-  const { searchMode } = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'searchMode',
-      message: chalk.yellow('\n🔍 Would you like to search through your forks?'),
-      default: false
-    }
-  ]);
-
   let filteredForks = forks;
-  
-  if (searchMode) {
-    const searchForks = async (answers: any, input = '') => {
-      const searchTerm = input.toLowerCase();
-      return forks.filter(fork => 
-        fork.name.toLowerCase().includes(searchTerm) ||
-        fork.full_name.toLowerCase().includes(searchTerm) ||
-        (fork.description && fork.description.toLowerCase().includes(searchTerm))
-      ).map(fork => ({
-        name: `${chalk.green(fork.full_name)} ${chalk.gray('→')} ${chalk.white(fork.description || 'No description')}`,
-        value: fork.full_name,
-        short: fork.full_name
-      }));
-    };
-
-    console.log(chalk.cyan('\n📝 Search Tips:'));
-    console.log(chalk.gray('• Type to filter repositories by name or description'));
-    console.log(chalk.gray('• Press Enter to see filtered results'));
-    console.log(chalk.gray('• Leave empty and press Enter to see all repositories\n'));
-
-    const { searchQuery } = await inquirer.prompt([
-      {
-        type: 'autocomplete',
-        name: 'searchQuery',
-        message: chalk.cyan('🔍 Search repositories:'),
-        source: searchForks,
-        pageSize: 10
-      }
-    ]);
-
-    // Filter repositories based on search query
-    const searchTerm = searchQuery.toLowerCase();
-    filteredForks = forks.filter(fork => 
-      fork.name.toLowerCase().includes(searchTerm) ||
-      fork.full_name.toLowerCase().includes(searchTerm) ||
-      (fork.description && fork.description.toLowerCase().includes(searchTerm))
-    );
-
-    console.log(chalk.green(`\n✨ Found ${chalk.bold(filteredForks.length)} matching repositories`));
-  }
 
   const { deleteAll } = await inquirer.prompt([
     {
       type: 'confirm',
       name: 'deleteAll',
-      message: searchMode 
-        ? chalk.yellow(`\n🗑️  Delete all ${filteredForks.length} filtered repositories? (No = Select individual repos)`)
-        : chalk.yellow('\n🗑️  Would you like to delete all forks? (Multiple confirmations required)'),
+      message: chalk.yellow('\n🗑️  Would you like to delete all forks? (Multiple confirmations required)'),
       default: false
     }
   ]);
@@ -227,7 +177,7 @@ async function main() {
   let selectedForks: string[] = [];
 
   if (deleteAll) {
-    const confirmed = await confirmDeleteAll(searchMode ? 1 : forks.length);
+    const confirmed = await confirmDeleteAll(forks.length);
     if (confirmed) {
       selectedForks = filteredForks.map(fork => fork.full_name);
     } else {
@@ -286,29 +236,60 @@ async function main() {
     return;
   }
 
-  console.log(chalk.cyan('\n🗑️  Processing Deletion...'));
+  console.log(chalk.cyan('\n🗑️  Starting Deletion Process...'));
   
+  const progressBar = new cliProgress.SingleBar({
+    format: chalk.cyan('Deleting repositories |') + '{bar}' + chalk.cyan('| {percentage}% || {value}/{total} Repositories'),
+    barCompleteChar: '█',
+    barIncompleteChar: '░',
+    hideCursor: true
+  });
+
   let successCount = 0;
   let failCount = 0;
+  const errors: Array<{ repo: string, error: string }> = [];
+  
+  progressBar.start(selectedForks.length, 0);
   
   for (const fullName of selectedForks) {
-    process.stdout.write(chalk.cyan(`\n📦 ${chalk.bold(fullName)} `));
-    const success = await deleteFork(fullName);
-    if (success) {
-      console.log(chalk.green('✅ Deleted'));
-      successCount++;
-    } else {
-      console.log(chalk.red('❌ Failed'));
+    const spinner = ora({
+      text: chalk.blue(`Processing ${chalk.bold(fullName)}`),
+      spinner: 'dots'
+    }).start();
+
+    try {
+      const success = await deleteFork(fullName);
+      if (success) {
+        spinner.succeed(chalk.green(`Deleted ${chalk.bold(fullName)}`));
+        successCount++;
+      } else {
+        spinner.fail(chalk.red(`Failed to delete ${chalk.bold(fullName)}`));
+        errors.push({ repo: fullName, error: 'Unknown error' });
+        failCount++;
+      }
+    } catch (error: any) {
+      spinner.fail(chalk.red(`Failed to delete ${chalk.bold(fullName)}`));
+      errors.push({ repo: fullName, error: error.message });
       failCount++;
     }
+
+    progressBar.increment();
   }
+
+  progressBar.stop();
 
   console.log(chalk.cyan('\n─'.repeat(50)));
   console.log(chalk.green.bold('\n✨ Operation Summary:'));
   console.log(chalk.green(`✅ Successfully deleted: ${successCount} repositories`));
+  
   if (failCount > 0) {
     console.log(chalk.red(`❌ Failed to delete: ${failCount} repositories`));
+    console.log(chalk.yellow('\nFailed Repositories:'));
+    errors.forEach(({ repo, error }) => {
+      console.log(chalk.red(`• ${chalk.bold(repo)}: ${error}`));
+    });
   }
+  
   console.log(chalk.cyan('\nThank you for using Forkaway! 👋\n'));
 }
 

@@ -56,13 +56,16 @@
   },
   "homepage": "https://github.com/bismarkhenao/forkaway#readme",
   "dependencies": {
+    "@types/cli-progress": "^3.11.6",
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.11.24",
     "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
     "dotenv": "^16.4.7",
     "inquirer": "^9.2.15",
     "inquirer-autocomplete-prompt": "^3.0.1",
-    "octokit": "^4.1.2"
+    "octokit": "^4.1.2",
+    "ora": "^8.2.0"
   },
   "devDependencies": {
     "@types/inquirer-autocomplete-prompt": "^3.0.3",
