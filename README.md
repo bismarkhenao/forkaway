@@ -14,7 +14,7 @@ A CLI tool to help you clean up your GitHub fork repositories efficiently.
 
 ## Prerequisites 📋
 
-- Node.js (v14 or higher)
+- Node.js (v16 or higher)
 - GitHub account
 - GitHub Personal Access Token with required permissions
 
