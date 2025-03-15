@@ -1,0 +1,73 @@
+{
+  "name": "forkaway",
+  "version": "1.0.0",
+  "description": "A CLI tool to manage and remove GitHub fork repositories safely and interactively",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "forkaway": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node --loader ts-node/esm src/index.ts",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "github",
+    "fork",
+    "cleanup",
+    "cli",
+    "repository",
+    "management",
+    "delete",
+    "remove",
+    "interactive",
+    "git",
+    "github-forks",
+    "fork-manager",
+    "fork-cleanup",
+    "fork-remover",
+    "github-tools",
+    "repository-management",
+    "github-api",
+    "forked-repos",
+    "clean",
+    "automation",
+    "typescript",
+    "node",
+    "cli-tool",
+    "terminal",
+    "command-line",
+    "github-automation",
+    "repo-cleaner",
+    "bulk-delete",
+    "fork-pruner"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bismarkhenao/forkaway.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bismarkhenao/forkaway/issues"
+  },
+  "homepage": "https://github.com/bismarkhenao/forkaway#readme",
+  "dependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.11.24",
+    "dotenv": "^16.4.7",
+    "inquirer": "^9.2.15",
+    "octokit": "^4.1.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
