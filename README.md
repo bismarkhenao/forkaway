@@ -1,190 +1,90 @@
-# Forkaway
+# Forkaway 🧹
 
-A TypeScript CLI tool to manage and remove your GitHub fork repositories safely and interactively.
+A CLI tool to help you clean up your GitHub fork repositories efficiently.
 
-## Features
+## Features ✨
 
-- 🔍 Lists all your GitHub fork repositories
-- ✅ Interactive selection of forks to delete
-- 🛡️ Confirmation step before deletion
-- 🔒 Secure token management via environment variables
-- 🎯 Only shows fork repositories (not original repositories)
-- 📋 Interactive multi-select interface
-- ⚡ Fast and efficient GitHub API usage
+- 🔍 List all your fork repositories
+- 🗑️ Delete multiple forks at once
+- ✅ Interactive selection with visual feedback
+- 📊 Progress tracking with status bars
+- 🎯 Bulk or selective deletion options
+- 🔒 Secure GitHub token handling
+- 💫 Beautiful CLI interface
 
-## Installation
+## Prerequisites 📋
+
+- Node.js (v14 or higher)
+- GitHub account
+- GitHub Personal Access Token with required permissions
+
+## Installation 🚀
 
 ```bash
 npm install -g forkaway
 ```
 
-## Setup
+## Setup 🔧
 
-1. Create a GitHub Personal Access Token:
-   1. Go to GitHub Settings > Developer settings > [Personal access tokens](https://github.com/settings/tokens)
-   2. Click "Generate new token (classic)"
-   3. Give it a name (e.g., "Fork Remover")
-   4. **Required Permissions (Scopes):**
-      - `repo` (Full control of private repositories)
-      - `delete_repo` (Delete repositories)
-      > ⚠️ **Important**: The `delete_repo` scope is REQUIRED to delete repositories. Without this scope, the deletion operations will fail with a 403 error.
-   5. Click "Generate token"
-   6. Copy the token (you won't be able to see it again!)
+1. Generate a GitHub token at https://github.com/settings/tokens
+2. Enable these permissions:
+   - `repo` (Full control of private repositories)
+   - `delete_repo` (Delete repositories)
+3. Add the token to your shell configuration:
 
-2. Add the token to your shell configuration:
-
-   **For zsh users (recommended):**
+   For zsh:
    ```bash
-   echo 'export GITHUB_TOKEN=your_github_personal_access_token' >> ~/.zshrc
+   echo 'export GITHUB_TOKEN=your_token' >> ~/.zshrc
    source ~/.zshrc
    ```
 
-   **For bash users:**
+   For bash:
    ```bash
-   echo 'export GITHUB_TOKEN=your_github_personal_access_token' >> ~/.bashrc
+   echo 'export GITHUB_TOKEN=your_token' >> ~/.bashrc
    source ~/.bashrc
    ```
 
-   > 🔒 **Security Note**: Storing the token in your shell configuration is more secure than keeping it in project files, as it prevents accidental commits of sensitive information.
-
-## Usage
-
-### Basic Usage
+## Usage 💻
 
 Simply run:
 ```bash
 forkaway
 ```
 
-### Interactive Interface
+The interactive CLI will guide you through:
+1. Scanning your GitHub account for forks
+2. Choosing between:
+   - Deleting all forks (with safety confirmations)
+   - Selecting specific forks to delete
+3. Reviewing selected repositories
+4. Confirming and executing deletions with progress tracking
 
-When you run `forkaway`, you'll see an interactive interface that:
+## Visual Feedback 📊
 
-1. 🔄 **Lists Your Forks**
-   - Shows all your fork repositories
-   - Displays repository names and descriptions
-   - Only includes actual forks (not original repositories)
+- Progress bars show deletion status
+- Spinners indicate active operations
+- Color-coded success/failure messages
+- Detailed error reporting
+- Operation summary at completion
 
-2. ✨ **Selection Interface**
-   - Use arrow keys (↑/↓) to navigate
-   - Press SPACE to select/deselect repositories
-   - Press A to select all
-   - Press I to invert selection
-   - Press ENTER when done selecting
+## Safety Features 🛡️
 
-3. ✅ **Confirmation Step**
-   - Reviews your selection
-   - Shows how many forks will be deleted
-   - Requires explicit confirmation to proceed
+- Multiple confirmations for bulk deletions
+- Review step before final deletion
+- Clear error messages
+- Ability to cancel at any point
 
-4. 📊 **Progress Display**
-   - Shows real-time progress of deletions
-   - Indicates success (✅) or failure (❌) for each operation
-   - Provides immediate feedback
+## Contributing 🤝
 
-### Example Session
+Contributions are welcome! Please check out our [Contributing Guide](CONTRIBUTING.md).
 
-```bash
-$ forkaway
-
-Fetching your fork repositories...
-Found 5 fork repositories.
-
-? Select the forks you want to delete:
-❯ ◯ user/old-project-fork (A fork of a deprecated project)
-  ◯ user/test-fork (Testing repository)
-  ◯ user/outdated-library-fork (Old library fork)
-  ◯ user/prototype-fork (Project prototype)
-  ◯ user/example-fork (Example implementation)
-
-[Space to select, A to toggle all, I to invert selection]
-
-? Are you sure you want to delete 3 fork(s)? (y/N)
-
-Deleting selected forks...
-Deleting user/old-project-fork... ✅
-Deleting user/test-fork... ✅
-Deleting user/outdated-library-fork... ✅
-
-Operation completed.
-```
-
-### When to Use
-
-Use `forkaway` when you want to:
-- Clean up old and unused fork repositories
-- Remove multiple forks in bulk
-- Safely manage your GitHub forks
-- Declutter your GitHub profile
-
-### Best Practices
-
-1. 🔍 **Review Carefully**: Always double-check the repositories you're about to delete
-2. 🔄 **Recent Changes**: Consider checking if you have any unpushed changes before deleting
-3. 🔒 **Token Security**: Never share or expose your GitHub token
-4. ⚠️ **Permanent Action**: Remember that deletion is permanent and cannot be undone
-
-## Development
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/bismarkhenao/forkaway.git
-   cd forkaway
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Run in development mode:
-   ```bash
-   npm run dev
-   ```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Must have admin rights to Repository" Error**
-   - This means your token doesn't have the `delete_repo` scope
-   - Solution: Generate a new token with both `repo` and `delete_repo` scopes
-
-2. **"Not Found" Error**
-   - This could mean the token doesn't have the `repo` scope
-   - Solution: Ensure your token has the `repo` scope enabled
-
-3. **"Bad Credentials" Error**
-   - This means your token is invalid or expired
-   - Solution: Generate a new token and update it in your shell configuration
-
-4. **Token Not Found Error**
-   - This means the `GITHUB_TOKEN` environment variable is not set
-   - Solution: Make sure you've added the export command to your shell configuration and sourced it
-
-### Still Having Issues?
-
-- Check our [Issues page](https://github.com/bismarkhenao/forkaway/issues) for known problems
-- Open a new issue if you encounter an unreported problem
-- Make sure you're using a supported Node.js version (>=16)
-
-## License
+## License 📄
 
 MIT
 
-## Contributing
+## Support 💪
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes:
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Support
-
-If you find this tool helpful, please consider:
-- Starring the repository ⭐
-- Sharing it with others 🔄
-- Contributing to its development 🛠️ 
+If you encounter any issues or have questions:
+- Open an issue at: https://github.com/bismarkhenao/forkaway/issues
+- Provide detailed information about the problem
+- Include any error messages 
