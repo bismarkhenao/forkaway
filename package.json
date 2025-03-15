@@ -8,7 +8,8 @@
     "forkaway": "./bin/cli.js"
   },
   "files": [
-    "dist",
+    "dist/index.js",
+    "dist/index.d.ts",
     "bin",
     "README.md",
     "LICENSE"
