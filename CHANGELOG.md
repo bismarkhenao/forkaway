@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/bismarkhenao/forkaway/compare/v1.0.1...v1.0.2) (2025-03-16)
+
+
+### Chores
+
+* update dependencies in package.json and package-lock.json, including @octokit/rest to version 20.0.0, and various other packages for improved compatibility and features ([58dbfc1](https://github.com/bismarkhenao/forkaway/commit/58dbfc1ec68d085948b6f60ad5652e913a52720a))
+* update package-lock.json and package.json to version 1.0.1, remove ts-node-dev dependency ([b3926b6](https://github.com/bismarkhenao/forkaway/commit/b3926b62f1a3e94e14632669b742f8575ef8f05c))
+
 ### 1.0.1 (2025-03-16)
 
 
