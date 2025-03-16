@@ -1,16 +1,13 @@
 name: CI
 
 on:
-  workflow_call:  # This makes the workflow reusable
-  push:
-    branches:
-      - '**'      # Run on all branches
-    paths-ignore:  # Don't run if only these files changed
-      - '**.md'
-      - 'LICENSE'
+  workflow_call:  # This makes the workflow reusable by publish.yml
   pull_request:
     branches:
-      - '**'
+      - main      # Run on PRs targeting main
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
 
 jobs:
   build-and-test:
