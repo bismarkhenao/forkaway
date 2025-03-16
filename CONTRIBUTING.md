@@ -1,10 +1,16 @@
-# Contributing to Forkaway 🤝
+# Contributing to Forkaway
 
 Thank you for your interest in contributing to Forkaway! This document provides guidelines and instructions for contributing.
 
-## Development Setup 🛠️
+## Code of Conduct
 
-1. **Fork and Clone**
+- Be respectful and inclusive
+- Focus on constructive feedback
+- Help others learn and grow
+
+## Development Process
+
+1. **Fork & Clone**
    ```bash
    git clone https://github.com/your-username/forkaway.git
    cd forkaway
@@ -15,16 +21,76 @@ Thank you for your interest in contributing to Forkaway! This document provides 
    npm install
    ```
 
-3. **Set Up Environment**
-   - Follow the README.md instructions to set up your GitHub token
-   - The token needs `repo` and `delete_repo` permissions
-
-4. **Run in Development**
+3. **Create Feature Branch**
    ```bash
-   npm run dev
+   git checkout -b feature/your-feature-name
    ```
 
-## Project Structure 📁
+4. **Development**
+   - Write code following the project's style
+   - Add tests for new features
+   - Run tests locally: `npm test`
+   - Use TypeScript for type safety
+
+5. **Commit Changes**
+   We use [Conventional Commits](https://www.conventionalcommits.org/):
+   ```bash
+   git commit -m "type(scope): description"
+   ```
+   Types:
+   - feat: New feature
+   - fix: Bug fix
+   - docs: Documentation changes
+   - test: Adding/updating tests
+   - refactor: Code changes (no fixes/features)
+   - chore: Build process/tool changes
+
+6. **Push & Create PR**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+   Then create a Pull Request on GitHub.
+
+## Pull Request Process
+
+1. **Title**: Use conventional commit format
+   - Example: "feat: add bulk deletion confirmation"
+
+2. **Description**:
+   - What changes were made
+   - Why these changes are needed
+   - How to test the changes
+   - Screenshots (if UI changes)
+
+3. **Review Process**:
+   - Automated tests must pass
+   - Code review required
+   - Changes requested must be addressed
+   - Approval needed before merge
+
+4. **After Merge**:
+   - Version bumped automatically
+   - Changelog updated
+   - Published to npm
+
+## Testing
+
+- Write tests for new features
+- Update tests for changes
+- Ensure all tests pass locally
+- Test files go in `src/__tests__`
+
+## Documentation
+
+- Update README.md for user-facing changes
+- Add JSDoc comments for functions
+- Update CHANGELOG.md (done automatically)
+
+## Questions?
+
+Open an issue or ask in the PR comments. We're here to help!
+
+## Project Structure ��
 
 ```
 forkaway/
@@ -53,35 +119,6 @@ Areas for potential improvement:
 - Batch operations
 - Additional safety features
 
-## Pull Request Process 📝
-
-1. **Create a Branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-2. **Make Changes**
-   - Write clean, readable code
-   - Follow existing code style
-   - Add comments where necessary
-   - Update documentation if needed
-
-3. **Test Your Changes**
-   - Ensure the code runs without errors
-   - Test edge cases
-   - Verify error handling
-
-4. **Commit Your Changes**
-   ```bash
-   git commit -m "Add: brief description of your changes"
-   ```
-
-5. **Push and Create PR**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-   Then create a Pull Request on GitHub
-
 ## Code Style Guidelines 📋
 
 - Use TypeScript features appropriately
@@ -90,28 +127,6 @@ Areas for potential improvement:
 - Keep functions focused and modular
 - Use meaningful variable names
 - Add error handling for API calls
-
-## Testing 🧪
-
-- Test your changes thoroughly
-- Consider edge cases
-- Verify error scenarios
-- Test with different GitHub configurations
-
-## Documentation 📚
-
-When adding or modifying features:
-- Update README.md if needed
-- Add JSDoc comments for functions
-- Update usage examples
-- Document any new dependencies
-
-## Questions or Problems? 🤔
-
-- Check existing issues first
-- Open a new issue if needed
-- Provide detailed information
-- Include error messages and logs
 
 ## License 📄
 
