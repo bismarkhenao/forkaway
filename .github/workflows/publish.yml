@@ -1,5 +1,15 @@
 name: Publish Package
 
+# Permissions needed to bypass branch protection
+permissions:
+  contents: write      # For pushing commits and tags
+  pull-requests: write # For commenting on PRs
+  id-token: write     # For publishing to npm
+  checks: write       # For updating check runs
+  statuses: write     # For updating commit statuses
+  actions: write      # For re-running workflows
+  deployments: write  # For managing deployments
+
 on:
   pull_request:
     types:
@@ -12,15 +22,13 @@ jobs:
     name: Release
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_BOT }}  # Use the release bot token
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -33,14 +41,17 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
       - name: Generate Release
         run: npm run release
 
       - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT }}
         run: |
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git push --follow-tags origin main
 
   publish:
@@ -54,6 +65,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
+          token: ${{ secrets.RELEASE_BOT }}  # Use the release bot token
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
