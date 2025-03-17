@@ -1,37 +1,38 @@
 import { jest } from '@jest/globals';
 import { Octokit } from '@octokit/rest';
-import { getForksList, deleteFork } from '../index.js';
+import { getForksList, deleteFork } from '@src/index.ts';
 
-// Mock environment variables
-process.env.GITHUB_TOKEN = 'mock-token';
-
-// Mock console functions to prevent output during tests
-console.log = jest.fn();
-console.error = jest.fn();
-
-// Mock Octokit
-type MockResponse = {
+interface MockResponse {
   data: any;
   status: number;
-  headers: Record<string, string>;
+  headers: Record<string, any>;
   url: string;
-};
+}
 
-const mockRequest = jest.fn().mockImplementation(async () => ({
-  data: {},
-  status: 200,
-  headers: {},
-  url: ''
-})) as jest.MockedFunction<(route: string, options?: any) => Promise<MockResponse>>;
+type MockRequestFn = (url: string, options?: any) => Promise<MockResponse>;
 
-// Create mock Octokit instance
+const mockRequest = jest.fn() as jest.MockedFunction<MockRequestFn>;
 const mockOctokit = {
   request: mockRequest
 } as unknown as Octokit;
 
+const mockPrompt = jest.fn() as jest.MockedFunction<(questions: any[]) => Promise<any>>;
+jest.mock('inquirer', () => ({
+  prompt: mockPrompt,
+  registerPrompt: jest.fn()
+}));
+
+beforeAll(() => {
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterAll(() => {
+  jest.restoreAllMocks();
+});
+
 describe('GitHub Fork Operations', () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     jest.clearAllMocks();
   });
 
@@ -54,12 +55,12 @@ describe('GitHub Fork Operations', () => {
         }
       ];
 
-      mockRequest.mockImplementationOnce(async () => ({
+      mockRequest.mockResolvedValueOnce({
         data: mockRepos,
         status: 200,
         headers: {},
         url: 'https://api.github.com/user/repos'
-      }));
+      });
 
       const forks = await getForksList(mockOctokit);
 
@@ -86,16 +87,17 @@ describe('GitHub Fork Operations', () => {
 
   describe('deleteFork', () => {
     it('should successfully delete a fork', async () => {
-      mockRequest.mockImplementationOnce(async () => ({
+      mockRequest.mockResolvedValueOnce({
         status: 204,
         data: {},
         headers: {},
         url: 'https://api.github.com/repos/user/repo1'
-      }));
+      });
 
       const result = await deleteFork('user/repo1', mockOctokit);
 
-      expect(result).toBe(true);
+      expect(result.success).toBe(true);
+      expect(result.error).toBeUndefined();
       expect(mockRequest).toHaveBeenCalledWith(
         'DELETE /repos/{owner}/{repo}',
         expect.objectContaining({
@@ -109,11 +111,17 @@ describe('GitHub Fork Operations', () => {
     });
 
     it('should handle deletion errors', async () => {
-      mockRequest.mockRejectedValueOnce(new Error('Deletion failed'));
+      const errorMessage = 'Repository not found';
+      mockRequest.mockRejectedValueOnce({
+        response: {
+          data: { message: errorMessage }
+        }
+      });
 
       const result = await deleteFork('user/repo1', mockOctokit);
 
-      expect(result).toBe(false);
+      expect(result.success).toBe(false);
+      expect(result.error).toBe(errorMessage);
       expect(console.error).toHaveBeenCalled();
     });
   });

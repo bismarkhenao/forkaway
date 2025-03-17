@@ -15,19 +15,12 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "start": "NODE_OPTIONS='--loader ts-node/esm' node src/index.ts",
-    "dev": "ts-node src/index.ts",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build",
-    "preversion": "git add -A src",
-    "version": "git add -A src",
-    "postversion": "git push && git push --tags",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:patch": "standard-version --release-as patch",
-    "release:major": "standard-version --release-as major"
+    "test": "NODE_OPTIONS='--no-warnings --experimental-vm-modules' jest",
+    "release": "standard-version"
   },
   "keywords": [
     "github",
