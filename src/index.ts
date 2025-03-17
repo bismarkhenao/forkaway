@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 
+// Only load .env file in non-test environments
+if (process.env.NODE_ENV !== 'test') {
+  import('dotenv/config').catch(err => {
+    console.error('Error loading .env file:', err);
+  });
+}
+
 import { Octokit } from '@octokit/rest';
 import inquirer from 'inquirer';
 import inquirerAutocomplete from 'inquirer-autocomplete-prompt';
@@ -54,6 +61,8 @@ export interface GithubRepo {
   fork: boolean;
 }
 
+export const CONFIRMATION_PHRASE = 'DELETE ALL FORKS';
+
 export async function getForksList(octokit: Octokit = defaultOctokit): Promise<Repository[]> {
   try {
     console.log(chalk.blue('\n🔍 Scanning your GitHub account for forks...'));
@@ -87,7 +96,7 @@ export async function getForksList(octokit: Octokit = defaultOctokit): Promise<R
   }
 }
 
-export async function deleteFork(fullName: string, octokit: Octokit = defaultOctokit): Promise<boolean> {
+export async function deleteFork(fullName: string, octokit: Octokit = defaultOctokit): Promise<{ success: boolean; error?: string }> {
   try {
     const [owner, repo] = fullName.split('/');
     await octokit.request('DELETE /repos/{owner}/{repo}', {
@@ -97,14 +106,13 @@ export async function deleteFork(fullName: string, octokit: Octokit = defaultOct
         'X-GitHub-Api-Version': '2022-11-28'
       }
     });
-    return true;
-  } catch (error) {
-    console.error(chalk.red(`Error deleting fork ${fullName}:`), error);
-    return false;
+    return { success: true };
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+    console.error(chalk.red(`Error deleting fork ${fullName}:`), errorMessage);
+    return { success: false, error: errorMessage };
   }
 }
-
-export const CONFIRMATION_PHRASE = "I'm sure I want to delete all forks";
 
 export async function confirmDeleteAll(forksCount: number): Promise<boolean> {
   console.log(chalk.bgRed.white.bold('\n⚠️  CAUTION: Mass Deletion Requested'));
@@ -149,12 +157,12 @@ export async function confirmDeleteAll(forksCount: number): Promise<boolean> {
   return false;
 }
 
-async function main() {
+export async function main(octokit: Octokit = defaultOctokit) {
   console.log(chalk.cyan('\n📦 Welcome to Forkaway - Your GitHub Fork Manager'));
   console.log(chalk.cyan('─'.repeat(50)));
   console.log(chalk.blue('\n🔍 Scanning your GitHub account...'));
   
-  const forks = await getForksList();
+  const forks = await getForksList(octokit);
   
   if (forks.length === 0) {
     console.log(chalk.yellow('\n📭 No fork repositories found in your account.'));
@@ -259,13 +267,13 @@ async function main() {
     }).start();
 
     try {
-      const success = await deleteFork(fullName);
-      if (success) {
+      const result = await deleteFork(fullName, octokit);
+      if (result.success) {
         spinner.succeed(chalk.green(`Deleted ${chalk.bold(fullName)}`));
         successCount++;
       } else {
         spinner.fail(chalk.red(`Failed to delete ${chalk.bold(fullName)}`));
-        errors.push({ repo: fullName, error: 'Unknown error' });
+        errors.push({ repo: fullName, error: result.error || 'Unknown error' });
         failCount++;
       }
     } catch (error: any) {

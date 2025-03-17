@@ -116,15 +116,24 @@ We use [Conventional Commits](https://www.conventionalcommits.org/). This helps 
    npm install
    ```
 
-3. Run in development mode:
+3. Set up development environment:
    ```bash
-   npm run dev
+   # Copy the example env file
+   cp .env.example .env
+   
+   # Edit .env and add your GitHub token
    ```
 
-4. Run tests:
+4. Run the CLI:
    ```bash
+   # For development
+   npm start
+   
+   # For testing
    npm test
    ```
+
+   The start script runs your TypeScript code directly with proper ESM support.
 
 ### Automated Workflows
 
