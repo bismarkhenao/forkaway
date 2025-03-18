@@ -6,7 +6,7 @@ export default defineConfig({
   clean: true,
   dts: false,
   splitting: false,
-  sourcemap: true,
+  sourcemap: false,
   minify: true,
   shims: true,
   platform: 'node',
@@ -22,8 +22,5 @@ export default defineConfig({
   treeshake: true,
   banner: {
     js: '#!/usr/bin/env node',
-  },
-  outExtension: () => ({
-    js: '.cjs'
-  })
+  }
 }) 
