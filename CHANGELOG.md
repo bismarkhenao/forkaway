@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.5](https://github.com/bismarkhenao/forkaway/compare/v1.0.4...v1.0.5) (2025-03-18)
+
+
+### Chores
+
+* disable sourcemaps and remove outExtension configuration in tsup.config.ts ([980c1a8](https://github.com/bismarkhenao/forkaway/commit/980c1a84319949dd501585830878ca946e59a055))
+
 ### [1.0.4](https://github.com/bismarkhenao/forkaway/compare/v1.0.3...v1.0.4) (2025-03-18)
 
 
