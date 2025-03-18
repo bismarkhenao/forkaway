@@ -1,6 +1,6 @@
 {
   "name": "forkaway",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A CLI tool to manage and clean up GitHub fork repositories",
   "type": "module",
   "private": false,

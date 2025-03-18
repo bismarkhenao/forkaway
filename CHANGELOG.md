@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.4](https://github.com/bismarkhenao/forkaway/compare/v1.0.3...v1.0.4) (2025-03-18)
+
+
+### Chores
+
+* add ESLint and Prettier configuration files, update package.json scripts, and enhance CI workflow ([aa03673](https://github.com/bismarkhenao/forkaway/commit/aa03673e736c90695c558a88bc916bb3c7b4888c))
+* update contributing guidelines, enhance README, and improve TypeScript build setup ([455f26e](https://github.com/bismarkhenao/forkaway/commit/455f26effa99890d62c5ecb7e6aec63ee0660260))
+* update package dependencies and add release script ([70eb59c](https://github.com/bismarkhenao/forkaway/commit/70eb59c0c0fcd589eb9a4ded00bc98497ad184d5))
+
 ### [1.0.3](https://github.com/bismarkhenao/forkaway/compare/v1.0.2...v1.0.3) (2025-03-17)
 
 
