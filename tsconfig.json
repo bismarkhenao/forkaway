@@ -14,7 +14,7 @@
       "@src/*": ["src/*"]
     },
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
   },
   "include": ["src/**/*", "test/**/*"],
   "exclude": ["node_modules", "dist"]

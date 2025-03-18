@@ -76,72 +76,13 @@ The interactive CLI will guide you through:
 
 ## Contributing 🤝
 
-Contributions are welcome! Here's how you can help:
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for detailed instructions on how to:
 
-1. Fork the repository
-2. Create a new branch: `git checkout -b feature/your-feature-name`
-3. Make your changes
-4. Write or update tests
-5. Commit using conventional commits:
-   ```bash
-   # Examples:
-   git commit -m "feat: add new cleanup option"
-   git commit -m "fix: handle error in fork deletion"
-   git commit -m "docs: update installation guide"
-   ```
-6. Push to your fork: `git push origin feature/your-feature-name`
-7. Open a Pull Request
-
-### Commit Convention
-
-We use [Conventional Commits](https://www.conventionalcommits.org/). This helps us automatically generate changelogs and version numbers. Common types:
-
-- `feat:` New features
-- `fix:` Bug fixes
-- `docs:` Documentation changes
-- `test:` Adding or updating tests
-- `refactor:` Code changes that neither fix bugs nor add features
-- `chore:` Changes to build process or auxiliary tools
-
-### Development Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/bismarkhenao/forkaway.git
-   cd forkaway
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Set up development environment:
-   ```bash
-   # Copy the example env file
-   cp .env.example .env
-   
-   # Edit .env and add your GitHub token
-   ```
-
-4. Run the CLI:
-   ```bash
-   # For development
-   npm start
-   
-   # For testing
-   npm test
-   ```
-
-   The start script runs your TypeScript code directly with proper ESM support.
-
-### Automated Workflows
-
-- Tests run automatically on Pull Requests
-- When PRs are merged to main:
-  1. Version is automatically bumped based on commit messages
-  2. Changelog is automatically updated
-  3. New version is published to npm
+- Set up your development environment
+- Make changes
+- Run tests
+- Submit pull requests
+- Follow our coding standards
 
 ## License 📄
 

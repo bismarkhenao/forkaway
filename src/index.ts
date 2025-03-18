@@ -1,21 +1,15 @@
-#!/usr/bin/env node
-
 // Only load .env file in non-test environments
 if (process.env.NODE_ENV !== 'test') {
-  import('dotenv/config').catch(err => {
+  import('dotenv/config').catch((err) => {
     console.error('Error loading .env file:', err);
   });
 }
 
 import { Octokit } from '@octokit/rest';
 import inquirer from 'inquirer';
-import inquirerAutocomplete from 'inquirer-autocomplete-prompt';
 import chalk from 'chalk';
 import ora from 'ora';
 import cliProgress from 'cli-progress';
-
-// Register the autocomplete prompt
-inquirer.registerPrompt('autocomplete', inquirerAutocomplete);
 
 // Get GitHub token from environment variables
 const githubToken = process.env.GITHUB_TOKEN;
@@ -31,9 +25,9 @@ if (!githubToken) {
   console.error(chalk.gray('   • delete_repo (Delete repositories)'));
   console.error(chalk.cyan('3. 💻 Add this to your shell configuration:'));
   console.error(chalk.gray('\n   For zsh:'));
-  console.error(chalk.white('   echo \'export GITHUB_TOKEN=your_token\' >> ~/.zshrc'));
+  console.error(chalk.white("   echo 'export GITHUB_TOKEN=your_token' >> ~/.zshrc"));
   console.error(chalk.gray('\n   For bash:'));
-  console.error(chalk.white('   echo \'export GITHUB_TOKEN=your_token\' >> ~/.bashrc'));
+  console.error(chalk.white("   echo 'export GITHUB_TOKEN=your_token' >> ~/.bashrc"));
   console.error(chalk.cyan('4. 🔄 Reload your configuration:'));
   console.error(chalk.white('   source ~/.zshrc  # or source ~/.bashrc\n'));
   console.log(chalk.cyan('─'.repeat(50)));
@@ -42,7 +36,7 @@ if (!githubToken) {
 
 // Create the default Octokit instance
 const defaultOctokit = new Octokit({
-  auth: githubToken
+  auth: githubToken,
 });
 
 export interface Repository {
@@ -71,8 +65,8 @@ export async function getForksList(octokit: Octokit = defaultOctokit): Promise<R
       sort: 'updated',
       per_page: 100,
       headers: {
-        'X-GitHub-Api-Version': '2022-11-28'
-      }
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
     });
 
     const forks = response.data
@@ -82,7 +76,7 @@ export async function getForksList(octokit: Octokit = defaultOctokit): Promise<R
         full_name: repo.full_name,
         description: repo.description,
         html_url: repo.html_url,
-        fork: repo.fork
+        fork: repo.fork,
       }));
 
     return forks;
@@ -96,19 +90,23 @@ export async function getForksList(octokit: Octokit = defaultOctokit): Promise<R
   }
 }
 
-export async function deleteFork(fullName: string, octokit: Octokit = defaultOctokit): Promise<{ success: boolean; error?: string }> {
+export async function deleteFork(
+  fullName: string,
+  octokit: Octokit = defaultOctokit
+): Promise<{ success: boolean; error?: string }> {
   try {
     const [owner, repo] = fullName.split('/');
     await octokit.request('DELETE /repos/{owner}/{repo}', {
       owner,
       repo,
       headers: {
-        'X-GitHub-Api-Version': '2022-11-28'
-      }
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
     });
     return { success: true };
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } } };
+    const errorMessage = err.response?.data?.message || 'Unknown error';
     console.error(chalk.red(`Error deleting fork ${fullName}:`), errorMessage);
     return { success: false, error: errorMessage };
   }
@@ -123,7 +121,7 @@ export async function confirmDeleteAll(forksCount: number): Promise<boolean> {
   console.log(chalk.gray('• Cannot be undone'));
   console.log(chalk.gray('• Will permanently delete all selected forks'));
   console.log(chalk.gray('• May affect your project references'));
-  
+
   console.log(chalk.cyan('\n🔒 Security Verification Required'));
   console.log(chalk.yellow(`Please type: ${chalk.bold.white('"' + CONFIRMATION_PHRASE + '"')}`));
 
@@ -137,8 +135,8 @@ export async function confirmDeleteAll(forksCount: number): Promise<boolean> {
           return true;
         }
         return chalk.red('❌ Phrase does not match. Please try again.');
-      }
-    }
+      },
+    },
   ]);
 
   if (confirmPhrase === CONFIRMATION_PHRASE) {
@@ -147,8 +145,8 @@ export async function confirmDeleteAll(forksCount: number): Promise<boolean> {
         type: 'confirm',
         name: 'finalConfirmation',
         message: chalk.bgRed.white.bold('🚨 Final Warning: Proceed with deleting ALL forks?'),
-        default: false
-      }
+        default: false,
+      },
     ]);
 
     return finalConfirmation;
@@ -161,26 +159,32 @@ export async function main(octokit: Octokit = defaultOctokit) {
   console.log(chalk.cyan('\n📦 Welcome to Forkaway - Your GitHub Fork Manager'));
   console.log(chalk.cyan('─'.repeat(50)));
   console.log(chalk.blue('\n🔍 Scanning your GitHub account...'));
-  
+
   const forks = await getForksList(octokit);
-  
+
   if (forks.length === 0) {
     console.log(chalk.yellow('\n📭 No fork repositories found in your account.'));
-    console.log(chalk.gray('\nTip: Forks are created when you click the "Fork" button on a GitHub repository.'));
+    console.log(
+      chalk.gray(
+        '\nTip: Forks are created when you click the "Fork" button on a GitHub repository.'
+      )
+    );
     return;
   }
 
   console.log(chalk.green(`\n✨ Found ${chalk.bold(forks.length)} fork repositories`));
 
-  let filteredForks = forks;
+  const filteredForks = forks;
 
   const { deleteAll } = await inquirer.prompt([
     {
       type: 'confirm',
       name: 'deleteAll',
-      message: chalk.yellow('\n🗑️  Would you like to delete all forks? (Multiple confirmations required)'),
-      default: false
-    }
+      message: chalk.yellow(
+        '🗑️  Would you like to delete all forks? (Multiple confirmations required)'
+      ),
+      default: false,
+    },
   ]);
 
   let selectedForks: string[] = [];
@@ -188,7 +192,7 @@ export async function main(octokit: Octokit = defaultOctokit) {
   if (deleteAll) {
     const confirmed = await confirmDeleteAll(forks.length);
     if (confirmed) {
-      selectedForks = filteredForks.map(fork => fork.full_name);
+      selectedForks = filteredForks.map((fork) => fork.full_name);
     } else {
       console.log(chalk.yellow('\n↩️  Bulk deletion cancelled. Switching to selective mode...'));
     }
@@ -199,12 +203,14 @@ export async function main(octokit: Octokit = defaultOctokit) {
       {
         type: 'checkbox',
         name: 'selectedForks',
-        message: chalk.cyan('\n📋 Select repositories to delete (Space to select, Enter to confirm):'),
-        choices: filteredForks.map(fork => ({
+        message: chalk.cyan(
+          '📋 Select repositories to delete (Space to select, Enter to confirm):'
+        ),
+        choices: filteredForks.map((fork) => ({
           name: `${chalk.green(fork.full_name)} ${chalk.gray('→')} ${chalk.white(fork.description || 'No description')}`,
-          value: fork.full_name
-        }))
-      }
+          value: fork.full_name,
+        })),
+      },
     ]);
 
     selectedForks = answers.selectedForks as string[];
@@ -218,8 +224,8 @@ export async function main(octokit: Octokit = defaultOctokit) {
 
   console.log(chalk.cyan('\n📋 Review Selected Repositories'));
   console.log(chalk.cyan('─'.repeat(50)));
-  
-  const selectedRepos = forks.filter(fork => selectedForks.includes(fork.full_name));
+
+  const selectedRepos = forks.filter((fork) => selectedForks.includes(fork.full_name));
   selectedRepos.forEach((fork, index) => {
     console.log(chalk.yellow(`\n${index + 1}. ${chalk.bold(fork.full_name)}`));
     if (fork.description) {
@@ -227,7 +233,7 @@ export async function main(octokit: Octokit = defaultOctokit) {
     }
     console.log(chalk.blue(`   🔗 ${fork.html_url}`));
   });
-  
+
   console.log(chalk.cyan('\n' + '─'.repeat(50)));
   console.log(chalk.yellow(`📊 Total selected: ${chalk.bold(selectedForks.length)} repositories`));
 
@@ -235,9 +241,9 @@ export async function main(octokit: Octokit = defaultOctokit) {
     {
       type: 'confirm',
       name: 'confirm',
-      message: chalk.red.bold('\n⚠️  Confirm Deletion'),
-      default: false
-    }
+      message: chalk.red.bold('⚠️ Confirm Deletion'),
+      default: false,
+    },
   ]);
 
   if (!confirmAnswer.confirm) {
@@ -246,24 +252,27 @@ export async function main(octokit: Octokit = defaultOctokit) {
   }
 
   console.log(chalk.cyan('\n🗑️  Starting Deletion Process...'));
-  
+
   const progressBar = new cliProgress.SingleBar({
-    format: chalk.cyan('Deleting repositories |') + '{bar}' + chalk.cyan('| {percentage}% || {value}/{total} Repositories'),
+    format:
+      chalk.cyan('Deleting repositories |') +
+      '{bar}' +
+      chalk.cyan('| {percentage}% || {value}/{total} Repositories'),
     barCompleteChar: '█',
     barIncompleteChar: '░',
-    hideCursor: true
+    hideCursor: true,
   });
 
   let successCount = 0;
   let failCount = 0;
-  const errors: Array<{ repo: string, error: string }> = [];
-  
+  const errors: Array<{ repo: string; error: string }> = [];
+
   progressBar.start(selectedForks.length, 0);
-  
+
   for (const fullName of selectedForks) {
     const spinner = ora({
       text: chalk.blue(`Processing ${chalk.bold(fullName)}`),
-      spinner: 'dots'
+      spinner: 'dots',
     }).start();
 
     try {
@@ -276,9 +285,14 @@ export async function main(octokit: Octokit = defaultOctokit) {
         errors.push({ repo: fullName, error: result.error || 'Unknown error' });
         failCount++;
       }
-    } catch (error: any) {
-      spinner.fail(chalk.red(`Failed to delete ${chalk.bold(fullName)}`));
-      errors.push({ repo: fullName, error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        spinner.fail(chalk.red(`Failed to delete ${chalk.bold(fullName)}`));
+        errors.push({ repo: fullName, error: error.message });
+      } else {
+        spinner.fail(chalk.red(`Failed to delete ${chalk.bold(fullName)}`));
+        errors.push({ repo: fullName, error: 'Unknown error' });
+      }
       failCount++;
     }
 
@@ -290,7 +304,7 @@ export async function main(octokit: Octokit = defaultOctokit) {
   console.log(chalk.cyan('\n─'.repeat(50)));
   console.log(chalk.green.bold('\n✨ Operation Summary:'));
   console.log(chalk.green(`✅ Successfully deleted: ${successCount} repositories`));
-  
+
   if (failCount > 0) {
     console.log(chalk.red(`❌ Failed to delete: ${failCount} repositories`));
     console.log(chalk.yellow('\nFailed Repositories:'));
@@ -298,11 +312,11 @@ export async function main(octokit: Octokit = defaultOctokit) {
       console.log(chalk.red(`• ${chalk.bold(repo)}: ${error}`));
     });
   }
-  
+
   console.log(chalk.cyan('\nThank you for using Forkaway! 👋\n'));
 }
 
 // Only run main if this file is being run directly
 if (import.meta.url === new URL(import.meta.url).href) {
   main();
-} 
+}
