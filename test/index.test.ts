@@ -1,25 +1,28 @@
 import { jest, describe, it, expect } from '@jest/globals';
 import { Octokit } from '@octokit/rest';
+import type { QuestionCollection, Answers } from 'inquirer';
 import { getForksList, deleteFork } from '@src/index.ts';
 
 interface MockResponse {
-  data: any;
+  data: unknown;
   status: number;
-  headers: Record<string, any>;
+  headers: Record<string, string>;
   url: string;
 }
 
-type MockRequestFn = (url: string, options?: any) => Promise<MockResponse>;
+type MockRequestFn = (url: string, options?: Record<string, unknown>) => Promise<MockResponse>;
 
 const mockRequest = jest.fn() as jest.MockedFunction<MockRequestFn>;
 const mockOctokit = {
-  request: mockRequest
+  request: mockRequest,
 } as unknown as Octokit;
 
-const mockPrompt = jest.fn() as jest.MockedFunction<(questions: any[]) => Promise<any>>;
+const mockPrompt = jest.fn() as jest.MockedFunction<
+  (questions: QuestionCollection) => Promise<Answers>
+>;
 jest.mock('inquirer', () => ({
   prompt: mockPrompt,
-  registerPrompt: jest.fn()
+  registerPrompt: jest.fn(),
 }));
 
 describe('GitHub Fork Operations', () => {
@@ -31,22 +34,22 @@ describe('GitHub Fork Operations', () => {
           full_name: 'user/repo1',
           description: 'Test repo 1',
           html_url: 'https://github.com/user/repo1',
-          fork: true
+          fork: true,
         },
         {
           name: 'repo2',
           full_name: 'user/repo2',
           description: null,
           html_url: 'https://github.com/user/repo2',
-          fork: false
-        }
+          fork: false,
+        },
       ];
 
       mockRequest.mockResolvedValueOnce({
         data: mockRepos,
         status: 200,
         headers: {},
-        url: 'https://api.github.com/user/repos'
+        url: 'https://api.github.com/user/repos',
       });
 
       const forks = await getForksList(mockOctokit);
@@ -57,7 +60,7 @@ describe('GitHub Fork Operations', () => {
         full_name: 'user/repo1',
         description: 'Test repo 1',
         html_url: 'https://github.com/user/repo1',
-        fork: true
+        fork: true,
       });
       expect(mockRequest).toHaveBeenCalledWith('GET /user/repos', expect.any(Object));
     });
@@ -78,7 +81,7 @@ describe('GitHub Fork Operations', () => {
         status: 204,
         data: {},
         headers: {},
-        url: 'https://api.github.com/repos/user/repo1'
+        url: 'https://api.github.com/repos/user/repo1',
       });
 
       const result = await deleteFork('user/repo1', mockOctokit);
@@ -91,8 +94,8 @@ describe('GitHub Fork Operations', () => {
           owner: 'user',
           repo: 'repo1',
           headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
         })
       );
     });
@@ -101,8 +104,8 @@ describe('GitHub Fork Operations', () => {
       const errorMessage = 'Repository not found';
       mockRequest.mockRejectedValueOnce({
         response: {
-          data: { message: errorMessage }
-        }
+          data: { message: errorMessage },
+        },
       });
 
       const result = await deleteFork('user/repo1', mockOctokit);
@@ -112,4 +115,4 @@ describe('GitHub Fork Operations', () => {
       expect(console.error).toHaveBeenCalled();
     });
   });
-}); 
+});

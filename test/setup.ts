@@ -9,7 +9,7 @@ const mockConsole = {
   error: jest.fn(),
   warn: jest.fn(),
   info: jest.fn(),
-  debug: jest.fn()
+  debug: jest.fn(),
 };
 
 // Replace console methods with mocks
@@ -33,4 +33,4 @@ afterAll(() => {
 
 // Mock environment variables before any imports
 process.env.NODE_ENV = 'test';
-process.env.GITHUB_TOKEN = 'mock-token-for-testing'; 
+process.env.GITHUB_TOKEN = 'mock-token-for-testing';
