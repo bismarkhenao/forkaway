@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { jest, beforeEach, afterAll, beforeAll } from '@jest/globals';
 
 // Increase timeout for all tests
 jest.setTimeout(10000);
@@ -15,9 +15,20 @@ const mockConsole = {
 // Replace console methods with mocks
 global.console = { ...console, ...mockConsole };
 
+// Setup global mocks before all tests
+beforeAll(() => {
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
 // Clear all mocks before each test
 beforeEach(() => {
   jest.clearAllMocks();
+});
+
+// Restore all mocks after all tests
+afterAll(() => {
+  jest.restoreAllMocks();
 });
 
 // Mock environment variables before any imports

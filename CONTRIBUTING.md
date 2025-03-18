@@ -1,133 +1,142 @@
-# Contributing to Forkaway
+# Contributing to Forkaway 🤝
 
-Thank you for your interest in contributing to Forkaway! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to Forkaway! This document provides guidelines and instructions for contributing to the project.
 
-## Code of Conduct
+## Getting Started 🚀
 
-- Be respectful and inclusive
-- Focus on constructive feedback
-- Help others learn and grow
-
-## Development Process
-
-1. **Fork & Clone**
+1. Fork the repository
+2. Clone your fork:
    ```bash
-   git clone https://github.com/your-username/forkaway.git
+   git clone https://github.com/YOUR_USERNAME/forkaway.git
    cd forkaway
    ```
-
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Create Feature Branch**
+3. Create a new branch:
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
-4. **Development**
-   - Write code following the project's style
-   - Add tests for new features
-   - Run tests locally: `npm test`
-   - Use TypeScript for type safety
+## Development Setup 🔧
 
-5. **Commit Changes**
-   We use [Conventional Commits](https://www.conventionalcommits.org/):
+1. Install dependencies:
    ```bash
-   git commit -m "type(scope): description"
+   npm install
    ```
-   Types:
-   - feat: New feature
-   - fix: Bug fix
-   - docs: Documentation changes
-   - test: Adding/updating tests
-   - refactor: Code changes (no fixes/features)
-   - chore: Build process/tool changes
 
-6. **Push & Create PR**
+2. Set up environment variables:
+   ```bash
+   # Copy the example env file
+   cp .env.example .env
+   
+   # Edit .env and add your GitHub token
+   # Required permissions: repo, delete_repo
+   ```
+
+## Available Scripts 📝
+
+- `npm run build` - Build the project for production
+- `npm start` - Build and run the CLI once
+- `npm run dev` - Run in development mode with auto-rebuild
+- `npm test` - Run tests once
+- `npm run test:watch` - Run tests in watch mode
+- `npm run prepare` - Build before publishing (runs automatically on `npm install`)
+
+## Development Workflow 💻
+
+1. **Making Changes**
+   - Make your changes in your feature branch
+   - Keep changes focused and atomic
+   - Follow the existing code style
+
+2. **Testing**
+   ```bash
+   # Run tests
+   npm test
+   # Or in watch mode during development
+   npm run test:watch
+   ```
+
+3. **Testing Your Changes**
+   ```bash
+   # Quick test
+   npm start
+   # Or in development mode with auto-rebuild
+   npm run dev
+   ```
+
+4. **Committing Changes**
+   We use [Conventional Commits](https://www.conventionalcommits.org/). Format your commit messages like this:
+   ```bash
+   type(scope): description
+   ```
+   
+   Types:
+   - `feat:` New features
+   - `fix:` Bug fixes
+   - `docs:` Documentation changes
+   - `test:` Adding or updating tests
+   - `refactor:` Code changes that neither fix bugs nor add features
+   - `chore:` Changes to build process or auxiliary tools
+
+   Examples:
+   ```bash
+   git commit -m "feat: add new cleanup option"
+   git commit -m "fix: handle error in fork deletion"
+   git commit -m "docs: update installation guide"
+   ```
+
+5. **Pushing Changes**
    ```bash
    git push origin feature/your-feature-name
    ```
-   Then create a Pull Request on GitHub.
 
-## Pull Request Process
+6. **Opening a Pull Request**
+   - Go to the original repository
+   - Click "New Pull Request"
+   - Select your branch
+   - Fill in the PR template
+   - Submit the PR
 
-1. **Title**: Use conventional commit format
-   - Example: "feat: add bulk deletion confirmation"
+## Development Guidelines 📋
 
-2. **Description**:
-   - What changes were made
-   - Why these changes are needed
-   - How to test the changes
-   - Screenshots (if UI changes)
+### Code Style
+- Use TypeScript for all new code
+- Follow the existing code style
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Keep functions focused and small
 
-3. **Review Process**:
-   - Automated tests must pass
-   - Code review required
-   - Changes requested must be addressed
-   - Approval needed before merge
-
-4. **After Merge**:
-   - Version bumped automatically
-   - Changelog updated
-   - Published to npm
-
-## Testing
-
+### Testing
 - Write tests for new features
-- Update tests for changes
-- Ensure all tests pass locally
-- Test files go in `src/__tests__`
+- Update tests for modified features
+- Ensure all tests pass before submitting PR
+- Use meaningful test descriptions
+- Follow the existing test patterns
 
-## Documentation
-
+### Documentation
 - Update README.md for user-facing changes
-- Add JSDoc comments for functions
-- Update CHANGELOG.md (done automatically)
+- Add JSDoc comments for new functions
+- Update inline comments when modifying code
+- Keep documentation up to date
 
-## Questions?
+### Pull Request Guidelines
+- Keep PRs focused and small
+- Include a clear description
+- Reference related issues
+- Add screenshots for UI changes
+- Ensure CI checks pass
 
-Open an issue or ask in the PR comments. We're here to help!
+## Getting Help 💪
 
-## Project Structure ��
+If you need help or have questions:
+- Open an issue
+- Join our discussions
+- Check existing issues and PRs
+- Review the documentation
 
-```
-forkaway/
-├── src/               # Source code
-│   └── index.ts      # Main application file
-├── dist/             # Compiled code
-├── node_modules/     # Dependencies
-├── .gitignore       # Git ignore rules
-├── package.json     # Project configuration
-├── tsconfig.json    # TypeScript configuration
-└── README.md        # Documentation
-```
+## Code of Conduct 📜
 
-## Features and Improvements 🎯
-
-Current features include:
-- Fork repository listing
-- Bulk deletion with confirmations
-- Individual fork selection
-- Progress tracking with status bars
-- Error handling and reporting
-
-Areas for potential improvement:
-- Search functionality
-- Sorting and filtering options
-- Batch operations
-- Additional safety features
-
-## Code Style Guidelines 📋
-
-- Use TypeScript features appropriately
-- Follow consistent naming conventions
-- Add type definitions where needed
-- Keep functions focused and modular
-- Use meaningful variable names
-- Add error handling for API calls
+By participating in this project, you agree to abide by our Code of Conduct. Please read it before contributing.
 
 ## License 📄
 
-By contributing, you agree that your contributions will be licensed under the MIT License. 
+By contributing, you agree that your contributions will be licensed under the project's MIT License. 

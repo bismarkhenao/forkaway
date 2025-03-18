@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // Only load .env file in non-test environments
 if (process.env.NODE_ENV !== 'test') {
   import('dotenv/config').catch(err => {
@@ -9,13 +7,9 @@ if (process.env.NODE_ENV !== 'test') {
 
 import { Octokit } from '@octokit/rest';
 import inquirer from 'inquirer';
-import inquirerAutocomplete from 'inquirer-autocomplete-prompt';
 import chalk from 'chalk';
 import ora from 'ora';
 import cliProgress from 'cli-progress';
-
-// Register the autocomplete prompt
-inquirer.registerPrompt('autocomplete', inquirerAutocomplete);
 
 // Get GitHub token from environment variables
 const githubToken = process.env.GITHUB_TOKEN;

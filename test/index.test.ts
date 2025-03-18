@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { jest, describe, it, expect } from '@jest/globals';
 import { Octokit } from '@octokit/rest';
 import { getForksList, deleteFork } from '@src/index.ts';
 
@@ -22,20 +22,7 @@ jest.mock('inquirer', () => ({
   registerPrompt: jest.fn()
 }));
 
-beforeAll(() => {
-  jest.spyOn(console, 'log').mockImplementation(() => {});
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-});
-
-afterAll(() => {
-  jest.restoreAllMocks();
-});
-
 describe('GitHub Fork Operations', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('getForksList', () => {
     it('should return a list of forks', async () => {
       const mockRepos = [
