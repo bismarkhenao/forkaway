@@ -14,14 +14,23 @@ A CLI tool to help you clean up your GitHub fork repositories efficiently.
 
 ## Prerequisites 📋
 
-- Node.js (v16 or higher)
-- GitHub account
-- GitHub Personal Access Token with required permissions
+- Node.js (v18 or higher)
+- GitHub Personal Access Token (will be prompted during first run)
 
 ## Installation 🚀
 
+### Option 1: Using npm (recommended)
 ```bash
 npm install -g forkaway
+```
+
+### Option 2: Using curl (universal install)
+```bash
+curl -o- https://raw.githubusercontent.com/bismarkhenao/forkaway/main/install.sh | bash
+```
+or using wget:
+```bash
+wget -qO- https://raw.githubusercontent.com/bismarkhenao/forkaway/main/install.sh | bash
 ```
 
 ## Setup 🔧
