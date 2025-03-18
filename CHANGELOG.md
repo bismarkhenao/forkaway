@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/bismarkhenao/forkaway/compare/v1.0.6...v1.1.0) (2025-03-18)
+
+
+### Features
+
+* add installation script and update README for Node.js requirements ([af6f53f](https://github.com/bismarkhenao/forkaway/commit/af6f53f7499965b3323afb8a7c3bac561c6ef0fd))
+
 ### [1.0.6](https://github.com/bismarkhenao/forkaway/compare/v1.0.5...v1.0.6) (2025-03-18)
 
 
