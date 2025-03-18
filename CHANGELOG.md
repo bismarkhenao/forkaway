@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.6](https://github.com/bismarkhenao/forkaway/compare/v1.0.5...v1.0.6) (2025-03-18)
+
+
+### Chores
+
+* update package-lock.json with dependency changes ([9b25332](https://github.com/bismarkhenao/forkaway/commit/9b25332c9ceb47119dfbfcd7fe724b34ed7245ff))
+
 ### [1.0.5](https://github.com/bismarkhenao/forkaway/compare/v1.0.4...v1.0.5) (2025-03-18)
 
 
