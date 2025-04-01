@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/bismarkhenao/forkaway/compare/v1.2.0...v1.3.0) (2025-04-01)
+
+
+### Features
+
+* implement pagination for fetching user forks in GitHub API ([8e216fe](https://github.com/bismarkhenao/forkaway/commit/8e216fe18ffa8b2b5c5e593bc810c669e96d9da8))
+
 ## [1.2.0](https://github.com/bismarkhenao/forkaway/compare/v1.1.0...v1.2.0) (2025-04-01)
 
 
