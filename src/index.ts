@@ -10,6 +10,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import ora from 'ora';
 import cliProgress from 'cli-progress';
+import { sanitizeErrorMessage } from '@src/utils/security';
 
 // Get GitHub token from environment variables
 const githubToken = process.env.GITHUB_TOKEN;
@@ -79,9 +80,18 @@ export async function getForksList(octokit: Octokit = defaultOctokit): Promise<R
         fork: repo.fork,
       }));
 
+    if (forks.length === 0) {
+      console.log(chalk.yellow('\n📭 No fork repositories found in your account.'));
+      console.log(
+        chalk.gray(
+          '\nTip: Forks are created when you click the "Fork" button on a GitHub repository.'
+        )
+      );
+    }
+
     return forks;
   } catch (error) {
-    console.error(chalk.red('\n❌ Error accessing GitHub:'), error);
+    console.error(chalk.red('\n❌ Error accessing GitHub:'), sanitizeErrorMessage(error));
     console.log(chalk.yellow('\n👉 Tips:'));
     console.log(chalk.gray('• Verify your internet connection'));
     console.log(chalk.gray('• Check if your token has the correct permissions'));
@@ -163,12 +173,6 @@ export async function main(octokit: Octokit = defaultOctokit) {
   const forks = await getForksList(octokit);
 
   if (forks.length === 0) {
-    console.log(chalk.yellow('\n📭 No fork repositories found in your account.'));
-    console.log(
-      chalk.gray(
-        '\nTip: Forks are created when you click the "Fork" button on a GitHub repository.'
-      )
-    );
     return;
   }
 
