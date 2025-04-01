@@ -61,26 +61,37 @@ export const CONFIRMATION_PHRASE = 'DELETE ALL FORKS';
 export async function getForksList(octokit: Octokit = defaultOctokit): Promise<Repository[]> {
   try {
     console.log(chalk.blue('\n🔍 Scanning your GitHub account for forks...'));
-    const response = await octokit.request('GET /user/repos', {
-      affiliation: 'owner',
-      sort: 'updated',
-      per_page: 100,
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
+    let allForks: Repository[] = [];
+    let page = 1;
+    let hasMore = true;
 
-    const forks = response.data
-      .filter((repo: GithubRepo) => repo.fork)
-      .map((repo: GithubRepo) => ({
-        name: repo.name,
-        full_name: repo.full_name,
-        description: repo.description,
-        html_url: repo.html_url,
-        fork: repo.fork,
-      }));
+    while (hasMore) {
+      const response = await octokit.request('GET /user/repos', {
+        affiliation: 'owner',
+        sort: 'updated',
+        per_page: 100,
+        page,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
 
-    if (forks.length === 0) {
+      const forks = response.data
+        .filter((repo: GithubRepo) => repo.fork)
+        .map((repo: GithubRepo) => ({
+          name: repo.name,
+          full_name: repo.full_name,
+          description: repo.description,
+          html_url: repo.html_url,
+          fork: repo.fork,
+        }));
+
+      allForks = [...allForks, ...forks];
+      hasMore = response.data.length === 100;
+      page++;
+    }
+
+    if (allForks.length === 0) {
       console.log(chalk.yellow('\n📭 No fork repositories found in your account.'));
       console.log(
         chalk.gray(
@@ -89,7 +100,7 @@ export async function getForksList(octokit: Octokit = defaultOctokit): Promise<R
       );
     }
 
-    return forks;
+    return allForks;
   } catch (error) {
     console.error(chalk.red('\n❌ Error accessing GitHub:'), sanitizeErrorMessage(error));
     console.log(chalk.yellow('\n👉 Tips:'));
