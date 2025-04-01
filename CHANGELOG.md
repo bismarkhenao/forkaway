@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/bismarkhenao/forkaway/compare/v1.1.0...v1.2.0) (2025-04-01)
+
+
+### Features
+
+* enhance error handling and provide user tips for empty forks list ([08ef48c](https://github.com/bismarkhenao/forkaway/commit/08ef48cd193804417c1d87b5f9a6668fad36d577))
+
 ## [1.1.0](https://github.com/bismarkhenao/forkaway/compare/v1.0.6...v1.1.0) (2025-03-18)
 
 
